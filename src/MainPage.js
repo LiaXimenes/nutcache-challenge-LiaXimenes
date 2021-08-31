@@ -1,11 +1,28 @@
+import { useEffect, useState } from 'react';
+
 import styled from 'styled-components';
 import trash from "./images/trash-bin.png"
 import edit from "./images/edit-pen.png"
+import RegisterPopup from './RegisterPopup';
 
 export default function MainPage(){
+    const [show, setShow] = useState(false);
+
+    function insertEmployee(){
+        setShow(true)
+    }
+
+    function deleteEmployee(){
+
+    }
+
+    function editEmployee(){
+
+    }
+
     return (
         <>
-            <Register>Register an Employee</Register>
+            <Register onClick={insertEmployee}>Register an Employee</Register>
 
             <Body>
                 <h1>List of Employees</h1>
@@ -16,11 +33,13 @@ export default function MainPage(){
                         <p>Start Date: 01/2021</p>
                         <p>Team: Front-End</p>
                         <Imagens>
-                            <img src={trash}/>
-                            <img src={edit}/>
+                            <button onClick={deleteEmployee}><img src={trash}/></button>
+                            <button onClick={editEmployee}><img src={edit}/></button>
                         </Imagens>
                     </EachEmployee>
                 </Box>
+
+                <RegisterPopup show={show} setShow={setShow}/>
             </Body>
         </>
     )

@@ -5,26 +5,39 @@ import styled from 'styled-components';
 import trash from "./images/trash-bin.png"
 import edit from "./images/edit-pen.png"
 import RegisterPopup from './RegisterPopup';
+import EditPopup from './EditPopup';
 
 export default function MainPage(){
-    const [show, setShow] = useState(false);
-    const [employees, setEmployees] = useState([])
+    const [showRegister, setShowRegister] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
+    const [employees, setEmployees] = useState([]);
+    const [editingEmployee, setEditingEmployee] = useState([])
 
     useEffect(() => {
+        getAllEmployees()
+    }, [])
+
+    function getAllEmployees(){
         const promise = axios.get("https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee")
         promise.then((req) => {console.log(req.data); setEmployees(req.data)})
         promise.catch()
-    }, [])
+    }
 
     function insertEmployee(){
-        setShow(true)
+        setShowRegister(true)
     }
 
-    function deleteEmployee(){
+    function deleteEmployee(id){
+        const promise = axios.delete(`https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee/${id}`)
+        promise.then(() => {getAllEmployees()})
+
 
     }
 
-    function editEmployee(){
+    function editEmployee(id){
+        const promise = axios.get(`https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee/${id}`)
+        promise.then((req) => {setEditingEmployee(req.data); setShowEdit(true)})
+        promise.catch()
 
     }
 
@@ -35,23 +48,35 @@ export default function MainPage(){
             <Body>
                 <h1>List of Employees</h1>
                 <Box>
+                    <EachEmployee>
+                        <td>Name: Lia</td>
+                        <td>Email: lia@email.com</td>
+                        <td>Start: 01/2021 </td>
+                        <td>Team: Front</td>
+                        <td>
+                            <button onClick={()=>{deleteEmployee()}}><img src={trash}/></button>
+                            <button onClick={()=>{editEmployee()}}><img src={edit}/></button>
+                        </td>
+                    </EachEmployee>
+
                     {employees.map((employee) => {
                         return (
                             <EachEmployee id={employee._id}>
-                                <p>Name: {employee.name}</p>
-                                <p>Email: {employee.email}</p>
-                                <p>Start {employee.startdate}</p>
-                                <p>Team: {employee.team}</p>
-                                <Imagens>
-                                    <button onClick={deleteEmployee}><img src={trash}/></button>
-                                    <button onClick={editEmployee}><img src={edit}/></button>
-                                </Imagens>
+                                <td>Name: {employee.name}</td>
+                                <td>Email: {employee.email}</td>
+                                <td>Start {employee.startdate}</td>
+                                <td>Team: {employee.team}</td>
+                                <td>
+                                    <button onClick={()=>{deleteEmployee(employee._id)}}><img src={trash}/></button>
+                                    <button onClick={()=>{editEmployee(employee._id)}}><img src={edit}/></button>
+                                </td>
                             </EachEmployee>
                         )
                     })}
                 </Box>
 
-                <RegisterPopup show={show} setShow={setShow}/>
+                <RegisterPopup showRegister={showRegister} setShowRegister={setShowRegister} getAllEmployees={getAllEmployees}/>
+                <EditPopup showEdit={showEdit} setShowEdit={setShowEdit} getAllEmployees={getAllEmployees} editingEmployee={editingEmployee}/>
             </Body>
         </>
     )
@@ -86,31 +111,30 @@ const Register = styled.button`
     }
 `;
 
-const Box = styled.div`
-    border: solid 1px black;
+const Box = styled.table`
     width: 80%;
 `;
 
-const EachEmployee = styled.div`
-    height: 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: solid 1px black;
-    padding-left: 10px;
-    padding-right: 10px;
-`;
+const EachEmployee = styled.tr`
+    border: 1px solid black;
 
-const Imagens = styled.div`
-    width: 70px;
-    display: flex;
-    justify-content: space-between;
+    td{
+        padding-left: 10px;
+        padding-right: 10px;
+        height: 40px;
 
-    img{
-        height: 25px;
 
-        :hover{
-            cursor: pointer;
+        img{
+            height: 20px;
+
+            :hover{
+                cursor: pointer;
+            }
         }
+    }
+
+    td:nth-child(5){
+        display: flex;
+        justify-content: space-evenly;
     }
 `;

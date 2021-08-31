@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function RegisterPopup({show, setShow}){
     const genderOptions = ["Cis Man", "Cis Woman", "Trans Man", "Trans Woman", "Non Binary", "I'd rather not say"]
@@ -9,13 +10,30 @@ export default function RegisterPopup({show, setShow}){
     const [email, setChosenEmail] = useState('');
     const [gender, setChosenGender] = useState('');
     const [cpf, setChosenCPF] = useState('');
-    const [birthDate, setChosenBirthDate] = useState('');
-    const [startDate, setChosenStartDate] = useState('');
+    const [birthdate, setChosenBirthDate] = useState('');
+    const [startdate, setChosenStartDate] = useState('');
     const [team, setChosenTeam] = useState('');
 
     function closePopup(){
         setShow(false)
     }
+
+    function sendEmployee(){
+        const config ={
+            name,
+            email,
+            gender,
+            cpf,
+            birthdate,
+            startdate,
+            team
+        }
+        console.log(config)
+        const promise = axios.post("https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee", config)
+        promise.then(() => {console.log("deu bom")})
+        promise.catch(() => {console.log("deu ruim")})
+    }
+       
 
 
     return (
@@ -34,7 +52,7 @@ export default function RegisterPopup({show, setShow}){
                     <option></option>
                     {genderOptions.map((option) => {
                             return(
-                            <option value={option.id}>
+                            <option>
                                 {option}
                             </option>
                         )
@@ -49,12 +67,13 @@ export default function RegisterPopup({show, setShow}){
                     <option></option>
                     {teamOptions.map((option) => {
                             return(
-                            <option value={option.id}>
+                            <option>
                                 {option}
                             </option>
                         )
                     })}
                 </select>
+                <SendButton onClick={sendEmployee}>Send</SendButton>
             </PopUp>
         </Body>
     )
@@ -116,3 +135,25 @@ const PopUp = styled.div`
         }
     }
 `;
+
+const SendButton = styled.div`
+    width: 100px;
+    height: 20px;
+    margin-left: 40%;
+    margin-bottom: 5px;
+    background-color: white;
+    border-radius: 5px;
+    border: solid 2px #7ce0d3;
+    box-shadow: 0px 0px 5px 3px #7ce0d3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :hover{
+        background-color: #7ce0d3;
+        cursor: pointer;
+    }
+
+
+
+`

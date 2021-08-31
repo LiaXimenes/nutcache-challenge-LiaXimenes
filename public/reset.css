@@ -129,5 +129,8 @@ table {
 }
 button {
   border: none;
-  background-color: white;
+  background-color: none;
+}
+body {
+  background-color: #f1f1f1;
 }

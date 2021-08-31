@@ -15,7 +15,7 @@ const Bar = styled.div`
     display: flex;
     align-items: center;
     box-shadow: 0px 5px 10px 0px #C8C2BC;
-
+    background-color: white;
 
     img{
         height: 75px;

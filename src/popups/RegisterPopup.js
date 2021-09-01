@@ -15,7 +15,17 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
     const [startdate, setChosenStartDate] = useState('');
     const [team, setChosenTeam] = useState('');
 
-    async function sendEmployee(){
+    function clearUseState(){
+        setChosenName('');
+        setChosenEmail('');
+        setChosenCPF('');
+        setChosenGender('');
+        setChosenBirthDate('');
+        setChosenStartDate('');
+        setChosenTeam('');
+    }
+
+    function sendEmployee(){
         const config ={
             name,
             email,
@@ -29,23 +39,19 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
         if(name === "" || email === "" || gender === "" || cpf === "" || birthdate === "" || startdate === ""){
             alert("Please, fill in all required (*) fields")
         } else{
-            await api.post("/nutemployee", config)
-            setChosenName('');
-            setChosenEmail('');
-            setChosenCPF('');
-            setChosenGender('');
-            setChosenBirthDate('');
-            setChosenStartDate('');
-            setChosenTeam('');
-            getAllEmployees('');
-            setShowRegister(false); 
+            const promise = api.post("/nutemployee", config)
+            promise.then(() => {
+                clearUseState()
+                getAllEmployees('');
+                setShowRegister(false); 
+            })
         }
     }
        
     return (
         <Body showRegister={showRegister}>
             <PopUp>
-                <button onClick={() => setShowRegister(false)}>X</button>
+                <button onClick={() => {setShowRegister(false); clearUseState()}}>X</button>
 
                 <p>Full name *</p>
                 <input type="text" value={name} placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}}/>

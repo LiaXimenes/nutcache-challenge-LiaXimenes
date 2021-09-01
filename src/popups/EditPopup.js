@@ -24,9 +24,7 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, emplo
         setChosenStartDate(employee.startdate)
         setChosenTeam(employee.team)
     }, [employee])
-
   
-
     function sendEditedEmployee(){
         const config ={
             name,
@@ -42,13 +40,6 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, emplo
         promise.then(() => {
             setShowEdit(false); 
             getAllEmployees();
-            setChosenName("");
-            setChosenEmail("")
-            setChosenCPF("")
-            setChosenGender("")
-            setChosenBirthDate("")
-            setChosenStartDate("")
-            setChosenTeam("")
         })
     }
 
@@ -123,6 +114,8 @@ const PopUp = styled.div`
         width: 500px;
         margin-bottom: 10px;
         margin-left: 10px;
+        padding: 3px;
+        box-shadow: 0px 0px 5px 3px #e5e5e5;
     }
 
     p{
@@ -133,6 +126,10 @@ const PopUp = styled.div`
         width: 510px;
         margin-bottom: 10px;
         margin-left: 10px;
+        padding: 3px;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: 0px 0px 5px 3px #e5e5e5;
     }
 
     button{

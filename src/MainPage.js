@@ -106,7 +106,6 @@ const EachEmployee = styled.tr`
         padding-right: 10px;
         height: 40px;
 
-
         img{
             height: 20px;
 

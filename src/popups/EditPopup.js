@@ -111,7 +111,7 @@ const PopUp = styled.div`
     justify-content: space-evenly;
 
     input{
-        width: 500px;
+        width: 80%;
         margin-bottom: 10px;
         margin-left: 10px;
         padding: 3px;
@@ -123,7 +123,7 @@ const PopUp = styled.div`
     }
 
     select{
-        width: 510px;
+        width: 80%;
         margin-bottom: 10px;
         margin-left: 10px;
         padding: 3px;
@@ -134,7 +134,7 @@ const PopUp = styled.div`
 
     button{
         width: 50px;
-        margin-left: 92%;
+        margin-left: 90%;
         background-color: white;
         border-radius: 5px;
 

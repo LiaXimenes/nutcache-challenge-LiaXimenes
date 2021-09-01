@@ -15,7 +15,7 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
     const [startdate, setChosenStartDate] = useState('');
     const [team, setChosenTeam] = useState('');
 
-    function sendEmployee(){
+    async function sendEmployee(){
         const config ={
             name,
             email,
@@ -29,8 +29,7 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
         if(name === "" || email === "" || gender === "" || cpf === "" || birthdate === "" || startdate === ""){
             alert("Please, fill in all required (*) fields")
         } else{
-            const promise = api.post("/nutemployee", config)
-            promise.then(() => {
+            await api.post("/nutemployee", config)
             setChosenName('');
             setChosenEmail('');
             setChosenCPF('');
@@ -40,7 +39,6 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
             setChosenTeam('');
             getAllEmployees('');
             setShowRegister(false); 
-            })
         }
     }
        
@@ -50,14 +48,14 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
                 <button onClick={() => setShowRegister(false)}>X</button>
 
                 <p>Full name *</p>
-                <input type="text" placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}}/>
+                <input type="text" value={name} placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}}/>
                 <p>Birth Date *</p>
-                <input type="date" placeholder="Birth Date" onChange={(e) => {setChosenBirthDate(e.target.value)}}/>
+                <input type="date" value={birthdate} placeholder="Birth Date" onChange={(e) => {setChosenBirthDate(e.target.value)}}/>
                 <p>E-mail *</p>
-                <input type="text" placeholder="Email" onChange={(e) => {setChosenEmail(e.target.value)}}/>
+                <input type="text" value={email} placeholder="Email" onChange={(e) => {setChosenEmail(e.target.value)}}/>
                 <p>Gender *</p>
-                <select onChange={(e) => {setChosenGender(e.target.value)}}>
-                    <option disabled>Select Gender:</option>
+                <select value={gender} onChange={(e) => {setChosenGender(e.target.value)}}>
+                    <option>Select Gender:</option>
                     {genderOptions.map((option) => {
                             return(
                             <option>
@@ -67,12 +65,12 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
                     })}
                 </select>
                 <p>CPF *</p>
-                <input type="text" placeholder="CPF" onChange={(e) => {setChosenCPF(e.target.value)}}/>
+                <input type="text" value={cpf} placeholder="CPF" onChange={(e) => {setChosenCPF(e.target.value)}}/>
                 <p>Start Date *</p>
-                <input type="text" placeholder="MM/YYYY" onChange={(e) => {setChosenStartDate(e.target.value)}}/>
+                <input type="text" value={startdate} placeholder="MM/YYYY" onChange={(e) => {setChosenStartDate(e.target.value)}}/>
                 <p>Team</p>
-                <select onChange={(e) => {setChosenTeam(e.target.value)}}>
-                    <option disabled>Select Team:</option>
+                <select value={team} onChange={(e) => {setChosenTeam(e.target.value)}}>
+                    <option>Select Team:</option>
                     {teamOptions.map((option) => {
                             return(
                             <option>
@@ -111,7 +109,6 @@ const PopUp = styled.div`
     flex-direction:column;
     justify-content: space-evenly;
 
-
     input{
         width: 500px;
         margin-bottom: 10px;
@@ -132,7 +129,6 @@ const PopUp = styled.div`
         background-color: white;
         border: 1px solid #ddd;
         box-shadow: 0px 0px 5px 3px #e5e5e5;
-
     }
 
     button{

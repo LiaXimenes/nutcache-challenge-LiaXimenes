@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {api} from "../services/api";
 
@@ -15,6 +15,18 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, emplo
     const [startdate, setChosenStartDate] = useState('');
     const [team, setChosenTeam] = useState('');
 
+    useEffect(() => {
+        setChosenName(employee.name)
+        setChosenEmail(employee.email)
+        setChosenGender(employee.gender)
+        setChosenCPF(employee.cpf)
+        setChosenBirthDate(employee.birthdate)
+        setChosenStartDate(employee.startdate)
+        setChosenTeam(employee.team)
+    }, [employee])
+
+  
+
     function sendEditedEmployee(){
         const config ={
             name,
@@ -25,8 +37,6 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, emplo
             startdate,
             team
         }
-
-        console.log(config)
 
         const promise = api.put(`/nutemployee/${employee._id}`, config)
         promise.then(() => {
@@ -41,8 +51,6 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, emplo
             setChosenTeam("")
         })
     }
-       
-
 
     return (
         <Body showEdit={showEdit}>
@@ -50,13 +58,13 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, emplo
                 <button onClick={() => setShowEdit(false)}>X</button>
 
                 <p>Full name</p>
-                <input type="text" placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}} />
+                <input type="text" value={name} placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}} />
                 <p>Birth Date</p>
-                <input type="date" placeholder="Birth date" onChange={(e) => {setChosenBirthDate(e.target.value)}}/>
+                <input type="date" value={birthdate} placeholder="Birth date" onChange={(e) => {setChosenBirthDate(e.target.value)}}/>
                 <p>E-mail</p>
-                <input type="text" placeholder="E-mail" onChange={(e) => {setChosenEmail(e.target.value)}}/>
+                <input type="text" value={email} placeholder="E-mail" onChange={(e) => {setChosenEmail(e.target.value)}}/>
                 <p>Gender</p>
-                <select onChange={(e) => {setChosenGender(e.target.value)}}>
+                <select value={gender} onChange={(e) => {setChosenGender(e.target.value)}}>
                     <option></option>
                     {genderOptions.map((option) => {
                             return(
@@ -67,11 +75,11 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, emplo
                     })}
                 </select>
                 <p>CPF</p>
-                <input type="text" placeholder="CPF" onChange={(e) => {setChosenCPF(e.target.value)}}/>
+                <input type="text" value={cpf} placeholder="CPF" onChange={(e) => {setChosenCPF(e.target.value)}}/>
                 <p>Start Date</p>
-                <input type="text" placeholder="MM/YYYY" onChange={(e) => {setChosenStartDate(e.target.value)}}/>
+                <input type="text" value={startdate} placeholder="MM/YYYY" onChange={(e) => {setChosenStartDate(e.target.value)}}/>
                 <p>Team</p>
-                <select onChange={(e) => {setChosenTeam(e.target.value)}}>
+                <select value={team} onChange={(e) => {setChosenTeam(e.target.value)}}>
                     <option></option>
                     {teamOptions.map((option) => {
                             return(
@@ -111,7 +119,6 @@ const PopUp = styled.div`
     flex-direction:column;
     justify-content: space-evenly;
 
-
     input{
         width: 500px;
         margin-bottom: 10px;
@@ -120,14 +127,12 @@ const PopUp = styled.div`
 
     p{
         margin-left: 10px;
-
     }
 
     select{
         width: 510px;
         margin-bottom: 10px;
         margin-left: 10px;
-
     }
 
     button{

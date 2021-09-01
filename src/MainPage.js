@@ -58,7 +58,7 @@ export default function MainPage(){
                 </Box>
 
                 <RegisterPopup showRegister={showRegister} setShowRegister={setShowRegister} getAllEmployees={getAllEmployees}/>
-                <EditPopup showEdit={showEdit} setShowEdit={setShowEdit} getAllEmployees={getAllEmployees} employee={setChosenEmployee}/>
+                <EditPopup showEdit={showEdit} setShowEdit={setShowEdit} getAllEmployees={getAllEmployees} employee={chosenEmployee}/>
                 <DeletePopup showDeletePopup={showDeletePopup} setShowDeletePopup={setShowDeletePopup} getAllEmployees={getAllEmployees} employee={chosenEmployee}/>
             </Body>
         </>

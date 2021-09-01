@@ -1,74 +1,56 @@
-import { useEffect, useReducer, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
 
+import {api} from "./services/api";
 import styled from 'styled-components';
 import trash from "./images/trash-bin.png"
 import edit from "./images/edit-pen.png"
-import RegisterPopup from './RegisterPopup';
-import EditPopup from './EditPopup';
+import RegisterPopup from './popups/RegisterPopup';
+import EditPopup from './popups/EditPopup';
+import DeletePopup from './popups/ConfirmPopup';
 
 export default function MainPage(){
     const [showRegister, setShowRegister] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [chosenEmployee, setChosenEmployee] = useState([]);
     const [employees, setEmployees] = useState([]);
-    const [editingEmployee, setEditingEmployee] = useState([])
 
     useEffect(() => {
         getAllEmployees()
     }, [])
 
     function getAllEmployees(){
-        const promise = axios.get("https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee")
-        promise.then((req) => {console.log(req.data); setEmployees(req.data)})
-        promise.catch()
+        const promise = api.get("/nutemployee")
+        promise.then((req) => {setEmployees(req.data)})
     }
 
-    function insertEmployee(){
-        setShowRegister(true)
+    function callDeletePopUp(employee){
+        setChosenEmployee(employee);
+        setShowDeletePopup(true);
     }
 
-    function deleteEmployee(id){
-        const promise = axios.delete(`https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee/${id}`)
-        promise.then(() => {getAllEmployees()})
-
-
-    }
-
-    function editEmployee(id){
-        const promise = axios.get(`https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee/${id}`)
-        promise.then((req) => {setEditingEmployee(req.data); setShowEdit(true)})
-        promise.catch()
-
+    function editEmployee(employee){
+        setChosenEmployee(employee);
+        setShowEdit(true);
     }
 
     return (
         <>
-            <Register onClick={insertEmployee}>Register an Employee</Register>
+            <Register onClick={() => setShowRegister(true)}>Register an Employee</Register>
 
             <Body>
                 <h1>List of Employees</h1>
                 <Box>
-                    <EachEmployee>
-                        <td>Name: Lia</td>
-                        <td>Email: lia@email.com</td>
-                        <td>Start: 01/2021 </td>
-                        <td>Team: Front</td>
-                        <td>
-                            <button onClick={()=>{deleteEmployee()}}><img src={trash}/></button>
-                            <button onClick={()=>{editEmployee()}}><img src={edit}/></button>
-                        </td>
-                    </EachEmployee>
-
                     {employees.map((employee) => {
                         return (
                             <EachEmployee id={employee._id}>
                                 <td>Name: {employee.name}</td>
                                 <td>Email: {employee.email}</td>
-                                <td>Start {employee.startdate}</td>
+                                <td>Start date: {employee.startdate}</td>
                                 <td>Team: {employee.team}</td>
                                 <td>
-                                    <button onClick={()=>{deleteEmployee(employee._id)}}><img src={trash}/></button>
-                                    <button onClick={()=>{editEmployee(employee._id)}}><img src={edit}/></button>
+                                    <button onClick={()=>{callDeletePopUp(employee)}}><img src={trash}/></button>
+                                    <button onClick={()=>{editEmployee(employee)}}><img src={edit}/></button>
                                 </td>
                             </EachEmployee>
                         )
@@ -76,7 +58,8 @@ export default function MainPage(){
                 </Box>
 
                 <RegisterPopup showRegister={showRegister} setShowRegister={setShowRegister} getAllEmployees={getAllEmployees}/>
-                <EditPopup showEdit={showEdit} setShowEdit={setShowEdit} getAllEmployees={getAllEmployees} editingEmployee={editingEmployee}/>
+                <EditPopup showEdit={showEdit} setShowEdit={setShowEdit} getAllEmployees={getAllEmployees} employee={setChosenEmployee}/>
+                <DeletePopup showDeletePopup={showDeletePopup} setShowDeletePopup={setShowDeletePopup} getAllEmployees={getAllEmployees} employee={chosenEmployee}/>
             </Body>
         </>
     )

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
-export default function EditPopup({showEdit, setShowEdit, getAllEmployees, editingEmployee}){
+import {api} from "../services/api";
+
+export default function RegisterPopup({showRegister, setShowRegister, getAllEmployees}){
     const genderOptions = ["Cis Man", "Cis Woman", "Trans Man", "Trans Woman", "Non Binary", "I'd rather not say"]
     const teamOptions = ["Front-end", "Back-end", "Mobile"];
 
@@ -14,13 +15,7 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, editi
     const [startdate, setChosenStartDate] = useState('');
     const [team, setChosenTeam] = useState('');
 
-    console.log(editingEmployee)
-
-    function closePopup(){
-        setShowEdit(false)
-    }
-
-    function sendEditedEmployee(){
+    function sendEmployee(){
         const config ={
             name,
             email,
@@ -31,34 +26,36 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, editi
             team
         }
 
-        const promise = axios.update(`https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee/${editingEmployee._id}`, config)
-        promise.then(() => {
-            setShowEdit(false); 
-            getAllEmployees();
-            setChosenName("");
-            setChosenEmail("")
-            setChosenCPF("")
-            setChosenGender("")
-            setChosenBirthDate("")
-            setChosenStartDate("")
-            setChosenTeam("")
-        })
+        if(name === "" || email === "" || gender === "" || cpf === "" || birthdate === "" || startdate === ""){
+            alert("Please, fill in all required (*) fields")
+        } else{
+            const promise = api.post("/nutemployee", config)
+            promise.then(() => {
+            setChosenName('');
+            setChosenEmail('');
+            setChosenCPF('');
+            setChosenGender('');
+            setChosenBirthDate('');
+            setChosenStartDate('');
+            setChosenTeam('');
+            getAllEmployees('');
+            setShowRegister(false); 
+            })
+        }
     }
        
-
-
     return (
-        <Body showEdit={showEdit}>
+        <Body showRegister={showRegister}>
             <PopUp>
-                <button onClick={closePopup}>X</button>
+                <button onClick={() => setShowRegister(false)}>X</button>
 
-                <p>Full name</p>
-                <input type="text" placeholder={editingEmployee.name} onChange={(e) => {setChosenName(e.target.value)}}/>
-                <p>Birth Date</p>
+                <p>Full name *</p>
+                <input type="text" placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}}/>
+                <p>Birth Date *</p>
                 <input type="date" placeholder="Birth Date" onChange={(e) => {setChosenBirthDate(e.target.value)}}/>
-                <p>E-mail</p>
+                <p>E-mail *</p>
                 <input type="text" placeholder="Email" onChange={(e) => {setChosenEmail(e.target.value)}}/>
-                <p>Gender</p>
+                <p>Gender *</p>
                 <select onChange={(e) => {setChosenGender(e.target.value)}}>
                     <option></option>
                     {genderOptions.map((option) => {
@@ -69,9 +66,9 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, editi
                         )
                     })}
                 </select>
-                <p>CPF</p>
+                <p>CPF *</p>
                 <input type="text" placeholder="CPF" onChange={(e) => {setChosenCPF(e.target.value)}}/>
-                <p>Start Date</p>
+                <p>Start Date *</p>
                 <input type="text" placeholder="MM/YYYY" onChange={(e) => {setChosenStartDate(e.target.value)}}/>
                 <p>Team</p>
                 <select onChange={(e) => {setChosenTeam(e.target.value)}}>
@@ -84,7 +81,7 @@ export default function EditPopup({showEdit, setShowEdit, getAllEmployees, editi
                         )
                     })}
                 </select>
-                <SendButton onClick={sendEditedEmployee}>Edit</SendButton>
+                <SendButton onClick={sendEmployee}>Send</SendButton>
             </PopUp>
         </Body>
     )
@@ -98,7 +95,7 @@ const Body = styled.div`
     top:0;
     left: 0;
     z-index: 10;
-    display: ${(props) => (props.showEdit ? "flex" : "none")};    
+    display: ${(props) => (props.showRegister ? "flex" : "none")};    
 `;
 
 const PopUp = styled.div`

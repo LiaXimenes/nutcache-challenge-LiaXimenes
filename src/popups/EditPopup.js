@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
-export default function RegisterPopup({showRegister, setShowRegister, getAllEmployees}){
+import {api} from "../services/api";
+
+export default function EditPopup({showEdit, setShowEdit, getAllEmployees, employee}){
     const genderOptions = ["Cis Man", "Cis Woman", "Trans Man", "Trans Woman", "Non Binary", "I'd rather not say"]
     const teamOptions = ["Front-end", "Back-end", "Mobile"];
 
@@ -14,11 +15,7 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
     const [startdate, setChosenStartDate] = useState('');
     const [team, setChosenTeam] = useState('');
 
-    function closePopup(){
-        setShowRegister(false)
-    }
-
-    function sendEmployee(){
+    function sendEditedEmployee(){
         const config ={
             name,
             email,
@@ -29,9 +26,11 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
             team
         }
 
-        const promise = axios.post("https://crudcrud.com/api/ba62d842dfa74888984a916313b8f5b3/nutemployee", config)
+        console.log(config)
+
+        const promise = api.put(`/nutemployee/${employee._id}`, config)
         promise.then(() => {
-            setShowRegister(false); 
+            setShowEdit(false); 
             getAllEmployees();
             setChosenName("");
             setChosenEmail("")
@@ -46,16 +45,16 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
 
 
     return (
-        <Body showRegister={showRegister}>
+        <Body showEdit={showEdit}>
             <PopUp>
-                <button onClick={closePopup}>X</button>
+                <button onClick={() => setShowEdit(false)}>X</button>
 
                 <p>Full name</p>
-                <input type="text" placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}}/>
+                <input type="text" placeholder="Name" onChange={(e) => {setChosenName(e.target.value)}} />
                 <p>Birth Date</p>
-                <input type="date" placeholder="Birth Date" onChange={(e) => {setChosenBirthDate(e.target.value)}}/>
+                <input type="date" placeholder="Birth date" onChange={(e) => {setChosenBirthDate(e.target.value)}}/>
                 <p>E-mail</p>
-                <input type="text" placeholder="Email" onChange={(e) => {setChosenEmail(e.target.value)}}/>
+                <input type="text" placeholder="E-mail" onChange={(e) => {setChosenEmail(e.target.value)}}/>
                 <p>Gender</p>
                 <select onChange={(e) => {setChosenGender(e.target.value)}}>
                     <option></option>
@@ -82,7 +81,7 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
                         )
                     })}
                 </select>
-                <SendButton onClick={sendEmployee}>Send</SendButton>
+                <SendButton onClick={sendEditedEmployee}>Edit</SendButton>
             </PopUp>
         </Body>
     )
@@ -96,7 +95,7 @@ const Body = styled.div`
     top:0;
     left: 0;
     z-index: 10;
-    display: ${(props) => (props.showRegister ? "flex" : "none")};    
+    display: ${(props) => (props.showEdit ? "flex" : "none")};    
 `;
 
 const PopUp = styled.div`

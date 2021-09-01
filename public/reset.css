@@ -127,10 +127,12 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-button {
+button,
+input {
   border: none;
   background-color: none;
 }
+
 body {
   background-color: #f1f1f1;
   font-family: "Roboto", sans-serif;

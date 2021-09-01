@@ -57,7 +57,7 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
                 <input type="text" placeholder="Email" onChange={(e) => {setChosenEmail(e.target.value)}}/>
                 <p>Gender *</p>
                 <select onChange={(e) => {setChosenGender(e.target.value)}}>
-                    <option></option>
+                    <option disabled>Select Gender:</option>
                     {genderOptions.map((option) => {
                             return(
                             <option>
@@ -72,7 +72,7 @@ export default function RegisterPopup({showRegister, setShowRegister, getAllEmpl
                 <input type="text" placeholder="MM/YYYY" onChange={(e) => {setChosenStartDate(e.target.value)}}/>
                 <p>Team</p>
                 <select onChange={(e) => {setChosenTeam(e.target.value)}}>
-                    <option></option>
+                    <option disabled>Select Team:</option>
                     {teamOptions.map((option) => {
                             return(
                             <option>
@@ -116,17 +116,22 @@ const PopUp = styled.div`
         width: 500px;
         margin-bottom: 10px;
         margin-left: 10px;
+        padding: 3px;
+        box-shadow: 0px 0px 5px 3px #e5e5e5;
     }
 
     p{
         margin-left: 10px;
-
     }
 
     select{
         width: 510px;
         margin-bottom: 10px;
         margin-left: 10px;
+        padding: 3px;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: 0px 0px 5px 3px #e5e5e5;
 
     }
 
